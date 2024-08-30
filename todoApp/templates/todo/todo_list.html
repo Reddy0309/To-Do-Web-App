@@ -1,0 +1,25 @@
+{% extends 'todo/base.html' %}
+
+{% block title %}Todo List{% endblock %}
+
+{% block content %}
+<h1>Todo List</h1>
+<button onclick="window.location.href='{% url 'todo_create' %}'">Add New Todo</button>
+<ul class="todo-list">
+    {% for todo in todos %}
+    <li class="todo-item">
+        <form method="post" action="{% url 'toggle_todo_status' todo.id %}" style="display: inline;">
+            {% csrf_token %}
+            <input type="checkbox" onchange="this.form.submit()" {% if todo.completed %}checked{% endif %}>
+        </form>
+        <span class="{% if todo.completed %}strikethrough{% endif %}">
+            {{ todo.title }}
+        </span>
+        <div class="buttons">
+            <button onclick="window.location.href='{% url 'todo_update' todo.id %}'">Edit</button>
+            <button onclick="window.location.href='{% url 'todo_delete' todo.id %}'">Delete</button>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
